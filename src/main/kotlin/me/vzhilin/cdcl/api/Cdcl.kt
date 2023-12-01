@@ -58,6 +58,7 @@ interface Cdcl<C: Clause<Literal>, Literal> {
 }
 
 enum class BCPResult { OK, CONFLICT }
+
 enum class LiteralPolarity { POSITIVE, NEGATIVE;
   fun invert(): LiteralPolarity {
     return when (this) {
