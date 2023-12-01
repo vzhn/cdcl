@@ -1,5 +1,11 @@
 data class Task(val vars: Int, val clauses: Set<Set<Int>>) {
-  fun check(result: Set<Int>): Set<Set<Int>> {
+  fun check(assignment: Map<UInt, Boolean>): Set<Set<Int>> {
+    val result = assignment.map { (k, v)  -> 
+      when (v) {
+        true -> k.toInt()
+        false -> -k.toInt()
+      }
+    }
     return clauses.filterNot { it.any(result::contains) }.toSet()
   }
 }

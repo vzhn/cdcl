@@ -1,4 +1,9 @@
+import me.vzhilin.cdcl.api.CDCLResult
+import me.vzhilin.cdcl.api.LiteralPolarity
+import me.vzhilin.cdcl.impl.simple.DefaultClause
+import me.vzhilin.cdcl.impl.simple.DefaultLogic
 import java.io.File
+import kotlin.math.abs
 
 fun main(args: Array<String>) {
   val file = File(args[0])
@@ -18,7 +23,17 @@ fun main(args: Array<String>) {
 fun processFile(file: File) {
   println("c file: ${file.absoluteFile}")
   val task = parse(file.readText())
-  val result = Cdcl(task.clauses).solve()
+  
+  val cdcl = DefaultLogic()
+  val cs = task.clauses.map { it -> 
+    val clause = DefaultClause()
+    it.forEach { 
+      clause.setValue(abs(it).toUInt(), if (it > 0) LiteralPolarity.POSITIVE else LiteralPolarity.NEGATIVE) 
+    }
+    return@map clause
+  }
+  cdcl.addClauses(cs)
+  val result = cdcl.solve()
   
   if (result is CDCLResult.Sat) {
     val assignment = result.assignment
@@ -27,7 +42,7 @@ fun processFile(file: File) {
       println("c assertion failed: $failedClauses")
     } else {
       println("s SATISFIABLE")
-      println("v " + assignment.toList().sortedBy(Math::abs).joinToString(separator = " "))
+      println("v " + assignment.toList().sortedBy { (k) -> k } .joinToString(separator = " "))
     }
   } else {
     println("s UNSAT")
