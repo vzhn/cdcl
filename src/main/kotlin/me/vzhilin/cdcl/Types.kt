@@ -6,26 +6,23 @@ typealias Clauses = Set<Set<Int>>
 typealias MutableClause = MutableSet<Int>
 typealias Clause = Set<Int>
 
-data class Assignment(val vars: MutableSet<Int>) {
-  fun size() = vars.size
-
-  fun haveLiteral(n: Int) = vars.contains(n) || vars.contains(-n)
+class Assignment {
+  val values get() = assignments.keys
   
-  fun haveLiterals(c: Clause) = c.all(::haveLiteral)
+  private val assignments = mutableMapOf<Int, UInt>() // assignment -> decision level
+  
+  fun size() = assignments.size
+
+  fun haveLiteral(n: Int) = assignments.contains(n) || assignments.contains(-n)  
   
   fun eval(clause: Clause, strict: Boolean = true): Boolean {
     for (n in clause) {
       if (strict && !haveLiteral(n)) throw AssertionError("missing assignment for $n")
-      if (vars.contains(n)) {
+      if (assignments.contains(n)) {
         return true
       }
     }
     return false
-  }
-  
-  fun eval(n: Int): Boolean {
-    if (!haveLiteral(n)) throw AssertionError("missing assignment for $n")
-    return vars.contains(n)
   }
   
   fun unitVar(c: Clause): Int? {
@@ -35,41 +32,36 @@ data class Assignment(val vars: MutableSet<Int>) {
   }
   
   fun isUnit(clause: Clause): Boolean {
-    if (clause.size < 2) return false
     val undef = clause.filter { !haveLiteral(it) }
     if (undef.size != 1) return false
     val literal = undef[0]
     return !eval(clause - literal, true)
   }
 
-  fun findUnit(clauses: Set<Set<Int>>): Pair<Clause, Int>? {
-    val clause = clauses.firstOrNull(::isUnit) ?: return null
-    return clause to unitVar(clause)!!
+  fun extend(n: Int, decisionLevel: UInt) {
+    this.assignments[n] = decisionLevel
   }
 
-  fun extend(ns: Collection<Int>) {
-    this.vars.addAll(ns)
+  fun falsyClauses(clauses: Collection<Set<Int>>) = clauses.filter { c ->
+    c.all { v ->
+      assignments.contains(-v)
+    }
   }
-
-  fun extend(n: Int) {
-    this.vars.add(n)
-  }
-
-  fun unassign(n: Int) {
-    this.vars.remove(n)
-  }
-
-  fun falsifiesClause(clauses: Set<Set<Int>>): Boolean {
-    return !clauses.all { !haveLiterals(it) || eval(it, false) }
-  }
-
-  fun pickUndefined(f: Clauses): Int {
-    val first = f.flatten().toSet().first { !haveLiteral(it) }
-    return first
-  }
-
 
   fun isEmpty(): Boolean {
-    return this.vars.isEmpty()
+    return this.assignments.isEmpty()
+  }
+
+  fun remove(n: Int) {
+    this.assignments.remove(n)
+    this.assignments.remove(-n)
+  }
+
+  fun level(it: Int): UInt {
+    return (this.assignments[it] ?: this.assignments[-it])!!
+  }
+
+  override fun toString(): String {
+    return assignments.keys.toString()
   }
 }

@@ -1,5 +1,3 @@
-import me.vzhilin.cdcl.Sat
-import me.vzhilin.cdcl.cdcl
 import java.io.File
 
 fun main(args: Array<String>) {
@@ -20,15 +18,16 @@ fun main(args: Array<String>) {
 fun processFile(file: File) {
   println("c file: ${file.absoluteFile}")
   val task = parse(file.readText())
-  val result = cdcl(task.clauses)
-  if (result is Sat) {
-    val assignment = result.a
-    val failedClauses = task.check(assignment.vars)
+  val result = Cdcl(task.clauses).solve()
+  
+  if (result is CDCLResult.Sat) {
+    val assignment = result.assignment
+    val failedClauses = task.check(assignment)
     if (failedClauses.isNotEmpty()) {
       println("c assertion failed: $failedClauses")
     } else {
       println("s SATISFIABLE")
-      println("v " + assignment.vars.toList().sortedBy(Math::abs).joinToString(separator = " "))
+      println("v " + assignment.toList().sortedBy(Math::abs).joinToString(separator = " "))
     }
   } else {
     println("s UNSAT")
