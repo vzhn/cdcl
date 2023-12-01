@@ -3,8 +3,7 @@ package me.vzhilin.cdcl.impl.simple
 import me.vzhilin.cdcl.api.*
 import kotlin.math.abs
 
-
-class DefaultLogic: CdclLogic<DefaultClause, UInt> {
+class DefaultCdcl: Cdcl<DefaultClause, UInt> {
   private var decisionLevel = 0u
   private val clauses = DefaultLearnedClauses()
   private val assignments = DefaultAssignments()

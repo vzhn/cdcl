@@ -1,7 +1,7 @@
 import me.vzhilin.cdcl.api.CDCLResult
 import me.vzhilin.cdcl.api.LiteralPolarity
 import me.vzhilin.cdcl.impl.simple.DefaultClause
-import me.vzhilin.cdcl.impl.simple.DefaultLogic
+import me.vzhilin.cdcl.impl.simple.DefaultCdcl
 import java.io.File
 import kotlin.math.abs
 
@@ -24,7 +24,7 @@ fun processFile(file: File) {
   println("c file: ${file.absoluteFile}")
   val task = parse(file.readText())
   
-  val cdcl = DefaultLogic()
+  val cdcl = DefaultCdcl()
   val cs = task.clauses.map { it -> 
     val clause = DefaultClause()
     it.forEach { 

@@ -1,6 +1,6 @@
 package me.vzhilin.cdcl.api
 
-interface CdclLogic<C: Clause<Literal>, Literal> {
+interface Cdcl<C: Clause<Literal>, Literal> {
   /**
    * All clauses
    */
@@ -63,6 +63,13 @@ enum class LiteralPolarity { POSITIVE, NEGATIVE;
     return when (this) {
       POSITIVE -> NEGATIVE
       NEGATIVE -> POSITIVE
+    }
+  }
+
+  companion object {
+    fun fromBoolean(v: Boolean) = when(v) {
+      true -> POSITIVE
+      false -> NEGATIVE
     }
   }
 }

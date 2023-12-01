@@ -34,12 +34,7 @@ class DefaultTrail : Trail<DefaultClause, UInt> {
     ++decisionLevel
     
     val antecedent = DefaultClause().also {
-      it.setValue(lit, 
-        if (v)
-          LiteralPolarity.POSITIVE 
-        else
-          LiteralPolarity.NEGATIVE
-      ) 
+      it.setValue(lit, LiteralPolarity.fromBoolean(v)) 
     }
     add(Type.DECISION, lit, v, antecedent)
   }
