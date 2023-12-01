@@ -67,6 +67,11 @@ enum class LiteralPolarity { POSITIVE, NEGATIVE;
     }
   }
 
+  fun toBoolean() = when(this) {
+    POSITIVE -> true
+    NEGATIVE -> false
+  }
+
   companion object {
     fun fromBoolean(v: Boolean) = when(v) {
       true -> POSITIVE

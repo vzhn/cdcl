@@ -68,12 +68,8 @@ class DefaultCdcl: Cdcl<DefaultClause, UInt> {
 
   override fun bcp(): BCPResult {
     while (true) {
-      val (clause, lit) = pickUnitClause() ?: return BCPResult.OK
-      
-      val v = when (clause.polarity(lit)) {
-        LiteralPolarity.POSITIVE -> true
-        LiteralPolarity.NEGATIVE -> false
-      }
+      val (clause, lit) = pickUnitClause() ?: return BCPResult.OK      
+      val v = clause.polarity(lit).toBoolean()
       
       assign(lit, v)
       trail.addBcp(lit, v, clause)
