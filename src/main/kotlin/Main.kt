@@ -7,16 +7,20 @@ import java.io.File
 import kotlin.math.abs
 
 fun main(args: Array<String>) {
-  val file = File(args[0])
-  if (file.isFile) {
-    processFile(file)
+  if (args.isEmpty()) {
+    println("error: please provide path to file in DIMACS CNF format, or path to folder with '*.cnf' files")
   } else {
-    val listFiles = file.listFiles {
-      f -> f.isFile && f.name.endsWith(".cnf")
-    }
-    listFiles?.forEach {
-      processFile(it)
-      println()
+    val file = File(args[0])
+    if (file.isFile) {
+      processFile(file)
+    } else {
+      val listFiles = file.listFiles {
+          f -> f.isFile && f.name.endsWith(".cnf")
+      }
+      listFiles?.forEach {
+        processFile(it)
+        println()
+      }
     }
   }
 }
