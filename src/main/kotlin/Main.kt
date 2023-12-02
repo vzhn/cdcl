@@ -1,5 +1,6 @@
 import me.vzhilin.cdcl.api.CDCLResult
 import me.vzhilin.cdcl.api.LiteralPolarity
+import me.vzhilin.cdcl.conversions.assignmentToDimacsCnf
 import me.vzhilin.cdcl.impl.simple.DefaultClause
 import me.vzhilin.cdcl.impl.simple.DefaultCdcl
 import java.io.File
@@ -11,7 +12,7 @@ fun main(args: Array<String>) {
     processFile(file)
   } else {
     val listFiles = file.listFiles {
-        f -> f.isFile && f.name.endsWith(".cnf")
+      f -> f.isFile && f.name.endsWith(".cnf")
     }
     listFiles?.forEach {
       processFile(it)
@@ -42,7 +43,7 @@ fun processFile(file: File) {
       println("c assertion failed: $failedClauses")
     } else {
       println("s SATISFIABLE")
-      println("v " + assignment.toList().sortedBy { (k) -> k } .joinToString(separator = " "))
+      println("v " + assignment.assignmentToDimacsCnf().joinToString(separator = " "))
     }
   } else {
     println("s UNSAT")

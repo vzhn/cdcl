@@ -7,12 +7,6 @@ interface Cdcl<C: Clause<Literal>, Literal> {
   fun clauses(): LearnedClauses<C, Literal>
 
   /**
-   * Appends new clause
-   * @param literals DIMACS-fashioned positive and negative literals
-   */
-  fun newClause(literals: Set<Int>): Clause<Literal>
-
-  /**
    * Add clauses
    * @param cs clauses
    */

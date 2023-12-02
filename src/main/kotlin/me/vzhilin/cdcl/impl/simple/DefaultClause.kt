@@ -38,6 +38,10 @@ class DefaultClause(vs: List<Pair<UInt, LiteralPolarity>> = emptyList()) : Claus
     return m.entries.map { (k, v) -> k to v }.iterator()
   }
 
+  override fun size(): Int {
+    return m.size
+  }
+
   override fun toString(): String {
     return m.entries.joinToString(separator = " ") { (k, v) -> "${if (v == LiteralPolarity.POSITIVE) k else -k.toInt()}" }
   }

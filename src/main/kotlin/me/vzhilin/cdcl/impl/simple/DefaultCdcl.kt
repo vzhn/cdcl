@@ -1,28 +1,13 @@
 package me.vzhilin.cdcl.impl.simple
 
 import me.vzhilin.cdcl.api.*
-import kotlin.math.abs
+import java.util.Collections
 
 class DefaultCdcl: Cdcl<DefaultClause, UInt> {
   private var decisionLevel = 0u
   private val clauses = DefaultLearnedClauses()
   private val assignments = DefaultAssignments()
   private val trail = DefaultTrail()
-  
-  override fun newClause(literals: Set<Int>): Clause<UInt> {
-    val c = DefaultClause()
-    for (v in literals) {
-      c.setValue(
-        abs(v).toUInt(), 
-        if (v > 0)
-          LiteralPolarity.POSITIVE 
-        else
-          LiteralPolarity.NEGATIVE
-      )
-    }
-    clauses.include(c)
-    return c
-  }
 
   override fun clauses(): DefaultLearnedClauses {
     return this.clauses
@@ -42,7 +27,7 @@ class DefaultCdcl: Cdcl<DefaultClause, UInt> {
     trail.addDecision(literal, value)
     return true
   }
-
+  
   override fun pickUnitClause(): Pair<DefaultClause, UInt>? {
     for (c in this.clauses) {
       val literals = c.filterNot { (lit, p) -> assignments.value(lit, p) != null }
@@ -54,6 +39,7 @@ class DefaultCdcl: Cdcl<DefaultClause, UInt> {
         return c to lit
       }
     }
+
     return null
   }
 
@@ -123,7 +109,7 @@ class DefaultCdcl: Cdcl<DefaultClause, UInt> {
       if (cl.isEmpty()) return AnalyzeConflictResult.Unsatisfiable()
     }
     
-    clauses.include(cl)
+    addClauses(Collections.singleton(cl))
     
     return AnalyzeConflictResult.Level(assertingLevel(cl), cl)
   }

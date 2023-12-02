@@ -34,15 +34,20 @@ class DefaultAssignments: Assignments<Clause<UInt>, UInt> {
     return litToValue.keys
   }
 
-  override fun backTrack(level: UInt) {
+  override fun backTrack(level: UInt): List<Pair<UInt, Boolean>> {
+    val unassigned = mutableListOf<Pair<UInt, Boolean>>()
+    
     for (lv in level + 1u..levelToLit.keys.max()) {
-      levelToLit[lv]?.forEach { 
-        litToLevel.remove(it)
-        litToValue.remove(it)
+      levelToLit[lv]?.forEach { lit -> 
+        litToLevel.remove(lit)
+        val value = litToValue.remove(lit)!!
+        unassigned.add(lit to value)
       }
       
       levelToLit.remove(lv)
     }
+    
+    return unassigned
   }
 
   override fun level(it: UInt): UInt {    

@@ -8,7 +8,7 @@ interface Assignments<C: Clause<Literal>, Literal> {
   fun evaluate(clause: C, literal: Literal): Boolean?
   fun evaluate(clause: C): Boolean?
   fun level(it: Literal): UInt
-  fun backTrack(level: UInt)
+  fun backTrack(level: UInt): List<Pair<UInt, Boolean>>
   
   val values: Map<Literal, Boolean>
 }
