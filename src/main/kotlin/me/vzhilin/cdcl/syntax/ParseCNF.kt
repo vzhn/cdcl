@@ -1,15 +1,11 @@
 package me.vzhilin.cdcl.syntax
 
-import me.vzhilin.cdcl.Clauses
-import me.vzhilin.cdcl.MutableClause
-import me.vzhilin.cdcl.MutableClauses
-
-fun parseCnf(input: String): Pair<Map<String, Int>, Clauses> {
-  val clauses: MutableClauses = mutableSetOf()
+fun parseCnf(input: String): Pair<Map<String, Int>, Set<Set<Int>>> {
+  val clauses: MutableSet<Set<Int>> = mutableSetOf()
   
   val s = mutableMapOf<String, Int>()
   input.split('∧').forEach { 
-    val clause: MutableClause = mutableSetOf()
+    val clause: MutableSet<Int> = mutableSetOf()
     
     it.removePrefix("(").removeSuffix(")").split("∨").map { literal ->
       if (literal.startsWith("¬")) {

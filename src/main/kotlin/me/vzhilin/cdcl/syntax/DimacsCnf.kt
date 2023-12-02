@@ -1,3 +1,4 @@
+
 data class Task(val vars: Int, val clauses: Set<Set<Int>>) {
   fun check(assignment: Map<UInt, Boolean>): Set<Set<Int>> {
     val result = assignment.map { (k, v)  -> 
